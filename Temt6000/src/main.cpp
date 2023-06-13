@@ -1,5 +1,5 @@
 /*
-  Version: 2.0, Dated: 13/6/2023
+  Version: 2.1, Dated: 13/6/2023
   Sensor: TEMT6000 Ambient Light Sensor
   Authur: Asif Mahmood
   Designation: Embedded System Engineer
@@ -24,7 +24,7 @@ void loop() {
   // put your main code here, to run repeatedly:
   // if x is true then light will be calculated in percentage else in lux
 
-  bool x = true; // x can be true or false
+  bool x = false; // x can be true or false
   if(x){
     lightPercent();
     delay(500);
@@ -33,26 +33,25 @@ void loop() {
     lightLux();
     delay(500);
   }
-
 }
 
 // calculating light falling from source 
 
 // light in percentage
 void lightPercent(){  
-  float lightVALUE;
-  float light;
-  lightVALUE = analogRead(signalPIN); // reading sensor's value (signal)
-  light = lightVALUE*0.0976; // calculating light in percentage
+  float voltage;
+  float percent;
+  voltage = (analogRead(signalPIN)/1024.0); // reading sensor's value (signal)
+  percent = voltage * 100; // calculating light in percentage
   Serial.print("Light ");
-  Serial.print(light);  
+  Serial.print(percent);  
   Serial.print(" %\n");
 }
 
 // light in lux
 void lightLux(){
-  float volts = map(analogRead(GPIO_NUM_13), 0, 1023, 0, 1000); // mapping analog values b/w 0-5 volts
-  float mAmps = (volts/10000)*1000; //  calculating mAmps I = (V/R)*1000
+  float volts = (analogRead(GPIO_NUM_13) * 5.0) / 1024.0; // converting analog values b/w 1-5 volts
+  float mAmps = (volts/10000)*1000000; //  calculating mAmps I = (V/R)*1000000
   float lux = mAmps * 2.0; // calculating lux
   Serial.print(lux);
   Serial.print(" lux\n");
